@@ -1,3 +1,4 @@
+// Base64 approach
 import React, { useRef, useState } from 'react';
 import choose from '../../assets/choose.png'
 const SellCar = () => {
