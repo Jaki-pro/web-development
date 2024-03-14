@@ -1,0 +1,39 @@
+import React, { useRef, useState } from 'react';
+import choose from '../../assets/choose.png'
+const SellCar = () => {
+    const [image, setImage] = useState("")
+    const convertToBase64 = (event) => {
+        var reader = new FileReader();
+        reader.readAsDataURL(event.target.files[0]);
+        reader.onload = () => {
+            setImage(reader.result)
+        }
+        //console.log(event);
+    }
+    //console.log(image);
+    const uploadImage = () => {
+        fetch('http://localhost:5000/uploads', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({base64: image})
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(err=>console.log(err))
+    }
+    return (
+        <>
+            <div>
+                <input type="file" onChange={convertToBase64} />
+            </div>
+            <img src={image} alt="" />
+            <button onClick={uploadImage} className='btn btn-primary'>Upload</button>
+        </>
+    );
+};
+
+export default SellCar;
