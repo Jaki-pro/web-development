@@ -1,0 +1,73 @@
+//Frontend Code
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'
+// import dd from '../../../images'
+const AddCar = () => {
+    const [image, setImage] = useState();
+    const [allImages, setAllImages] = useState([]); 
+    const [update, setUpdate] = useState(false); 
+    useEffect(()=>{
+        fetch('http://localhost:5000/upload-image')
+        .then(res=>res.json())
+        .then(data=>setAllImages(data));
+    },[update]) 
+    const onInputChange = (e) => {
+        console.log(e.target.files[0]);
+        setImage(e.target.files[0])
+    }
+    const submitImage = (event) => {
+        event.preventDefault();
+        const formData = new FormData;
+        formData.append('image', image);
+        // console.log(formData);
+        axios.post(
+            'http://localhost:5000/upload-image',
+            formData,
+            {
+                headers: {
+                    'content-type':'multipart/form-data'
+                }
+            }
+        )
+        .then(data=>setUpdate(!update))
+        .catch(err=>console.log(err))
+         
+    } 
+    return (
+        <div>
+            <form onSubmit={submitImage}>
+                <input type="file" name="" accept='image/*' onChange={onInputChange} id="" />
+                <input type="submit" className='btn btn-primary' value="Submit" />
+            </form>
+            
+               {allImages.map(img=><img key={img._id} src={`http://localhost:5000/${img.image}`} alt="fgdfg" />)}
+               
+        </div>
+    );
+};
+
+export default AddCar;
+
+
+//Backend Code
+const multer  = require('multer') 
+app.use(express.static('uploads')); // directory automation
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/') //Create a directory in backend named uploads and picture will be stored here
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now();
+    cb(null, uniqueSuffix+file.originalname)
+  }
+})
+const upload = multer({ storage: storage })
+
+//Upload to Database
+    // upload image
+    app.post('/upload-image', upload.single('image'), async(req, res) => {
+      const data = req.body;
+      data.image=req.file.filename;
+      const result = await imgUploads.insertOne(data);
+      res.send(result)
+    })
