@@ -71,3 +71,5 @@ const upload = multer({ storage: storage })
       const result = await imgUploads.insertOne(data);
       res.send(result)
     })
+// Install multer
+// https://github.com/expressjs/multer/blob/master/doc/README-ru.md
