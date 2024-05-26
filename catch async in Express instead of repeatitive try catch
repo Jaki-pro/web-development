@@ -1,3 +1,8 @@
+/*
+The main purpose of catchAsync is to simplify error handling for asynchronous route handlers in Express. 
+Without this utility, you would have to manually wrap each asynchronous route handler in a try-catch block 
+or attach a .catch method to each promise to handle errors and pass them to the next middleware.
+*/
 // Higher order function: is a function that takes one or more functions as arguments and return a function
 const catchAsync = (fn: RequestHandler) => {
   return (req: Request, res: Response, next: NextFunction) => {
