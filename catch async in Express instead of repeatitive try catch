@@ -1,0 +1,17 @@
+// Higher order function: is a function that takes one or more functions as arguments and return a function
+const catchAsync = (fn: RequestHandler) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch((err) => next(err)); //send err to the global error handler
+  };
+};
+const createStudent = catchAsync(async (req, res, next) => {
+
+  // functionalities you wanna do ......
+
+  sendResponse(res, { // send response to the global response named sendResponse
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Student created successfully',
+    data: result,
+  });
+});
