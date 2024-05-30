@@ -1,0 +1,6 @@
+db.documents.find({
+    textField: {
+        $regex: "world",
+        $options: "i"
+    }
+});
