@@ -1,0 +1,29 @@
+  //start a session
+  const session = await mongoose.startSession();
+  try {
+    //start a transaction
+    await session.startTransaction();
+    userData.id = await generateStudentId(
+      admissionSemester as TAcademicSemester,
+    );
+    //create a user (transaction-1)
+    const newUser = await User.create([userData], { session }); // builtin static method
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user');
+    }
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id; // reference ID
+
+    // create a student (taransaction -2)
+    const newStudent = await Student.create([payload], { session });
+    if (!newStudent.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
+    }
+    await session.commitTransaction(); // successful-commit transation
+    await session.endSession(); // End transaction
+    return newStudent;
+  } catch (err) {
+    await session.abortTransaction(); // Error in transaction-so abort
+    await session.endSession(); // End transaction
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
+  }
