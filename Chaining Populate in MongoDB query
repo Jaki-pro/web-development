@@ -1,0 +1,11 @@
+const getAllStudentsFromDB = async () => {
+  const result = await Student.find()
+    .populate({ path: 'admissionSemester' })
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    });
+  return result;
+};
