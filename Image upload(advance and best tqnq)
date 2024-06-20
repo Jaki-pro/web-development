@@ -4,9 +4,9 @@ import multer from 'multer';
 import fs from 'fs';
 
 cloudinary.config({
-  cloud_name: 'dv0u3li3j',
-  api_key: '466877279195571',
-  api_secret: 'LpmhqS4_fyPLOwl3s1unukQ4gUw', // Click 'View Credentials' below to copy your API secret
+  cloud_name: config.cloudinary_cloud_name,
+  api_key: config.cloudinary_api_key,
+  api_secret: config.cloudinary_api_secret,
 });
 export const sendImageToCloudinary = async (
   imageName: string,
